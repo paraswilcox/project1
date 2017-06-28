@@ -89,13 +89,16 @@ def send_secret_msg():
     show_menu()
 
 
+# This function uses steganography to decode message received from friend and appends it the spy's chat list
+# This function deletes a spy if they talk too much more than 100 words
 def read_secret_msg():
     sender = select_a_friend(spy)
-
     file_name = input("What is the name of the file?")
-
     decoded_message = lsb.reveal(file_name)
-    if len(decoded_message) < 10:
+    # We split the message with space as separator
+    # as we have to delete a spy based on words not alphabets
+    num_of_words = decoded_message.split()
+    if len(num_of_words) < 100:
         new_chat = Chat(decoded_message, False)
         spy.friend_list[sender].chats.append(new_chat)
         print("Your secret message has been saved!")
