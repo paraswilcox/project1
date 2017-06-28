@@ -109,10 +109,10 @@ def read_secret_msg():
     show_menu()
 
 
+# this fxn shows chat history b/w our spy and a friend our spy chooses
 def read_chats():
     read_chat_of = select_a_friend(spy)
-    print("chat history : ")
-    print('\n')
+    print("chat history b/w you and {}: ".format(spy.friend_list[read_chat_of].spyname))
     print('\n')
     for a_chat in spy.friend_list[read_chat_of].chats:
         if a_chat.sent_by_me:
