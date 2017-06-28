@@ -1,3 +1,8 @@
+# This file contains the default spy data which would be imported in the main.py
+# Importing required modules
+from datetime import datetime
+
+
 # This class defines the specifications of a spy
 class Spy:
     # below are the spy methods
@@ -95,3 +100,12 @@ def check_spy_eligibility(age):
         return True
     else:
         return False
+
+
+# A class called chat defined which is a message with a timestamp
+class Chat:
+    # constructor for chat object
+    def __init__(self, message, sent_by_me):
+        self.message = message
+        self.time = datetime.now()
+        self.sent_by_me = sent_by_me
