@@ -3,6 +3,65 @@
 # importing Spy class and its associated methods
 # stand alone functions will come in handy also
 from spy_details import Spy, Chat, check_spy_eligibility, message_for_spy, select_a_friend
+# importing Steganography class and its associated methods
+# for encoding and decoding messages
+from stegano import lsb
+
+
+# a function that updates the status using Spy methods
+# it checks if there is a status update already
+#   if that,s the case then it shows the the current status and user has two options
+#   Either choose status from previous status updates or add a new one altogether
+# if there is no status update then it asks to add a new status altogether
+# in either of the cases at last it shows the current status
+def status_update():
+    pass
+
+
+# This function asks user to enter friend details and if they fulfill the criteria for a spy
+# then it adds the friend to the friends list of our spy
+# if a friend is added it notifies the user by printing the message "friend added"
+def add_a_friend():
+    pass
+
+
+# This function uses Steganography to encode the message and send it to the desired friend
+# it calls the Spy method named select_a_friend to select a friend out of online friends
+def send_secret_msg():
+    pass
+
+
+def read_secret_msg():
+    pass
+
+
+def read_chats():
+    pass
+
+
+# This function shows menu to the user
+# there are 6 choices to choose from
+# each choice calls a function to handle that choice
+# valid choices result in call to the corresponding function
+# 6th and any other choice halts the program
+def show_menu():
+    menu_choice = int(input("What do you want to do? \n 1. Add a status update \n 2. Add a friend \n 3. Send a secret "
+                            "message \n 4. Read a secret message \n 5. Read Chats from a user \n 6. Close Application "
+                            "\n "))
+    if menu_choice == 1:
+        status_update()
+    elif menu_choice == 2:
+        num_of_friends = add_a_friend()
+        print("You have {} friends".format(num_of_friends))
+        show_menu()
+    elif menu_choice == 3:
+        send_secret_msg()
+    elif menu_choice == 4:
+        read_secret_msg()
+    elif menu_choice == 5:
+        read_chats()
+    else:
+        exit()
 
 
 # A function that asks the user to entered the details if user isn't the default user
@@ -65,3 +124,6 @@ if ask_for_info:
 # Welcome the spy (We use the spy object and its methods)
 print("Welcome {} {} age : {}, rating : {:0.2f}"
       .format(spy.get_salutation(), spy.get_name(), spy.get_age(), spy.get_rating()))
+
+# We call the "show_menu" function to let the user make a choice from the menu
+show_menu()
