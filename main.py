@@ -15,28 +15,117 @@ from stegano import lsb
 # if there is no status update then it asks to add a new status altogether
 # in either of the cases at last it shows the current status
 def status_update():
-    pass
+    if spy.status is None:
+        print("You do not have any status ")
+        input_status = input("Enter Status to update")
+        spy.update_spy_status(input_status)
+        print("Your status : ")
+        spy.show_status()
+    else:
+        print("Your current Status is : ")
+        spy.show_status()
+        user_choice = input("Enter y if you want to update status from previous status updates : ")
+        if user_choice == "Y" or user_choice == "y":
+            print("These are your previous status updates :")
+            spy.show_previous_status()
+            user_choice1 = int(input("Enter the number of the status update: "))
+            spy.update_spy_status(spy.pool_of_status[user_choice1 - 1])
+            print("Your status : \n")
+            spy.show_status()
+        else:
+            input_status = input("Enter Status to update")
+            spy.update_spy_status(input_status)
+            print("Your status : ")
+            spy.show_status()
+    show_menu()
 
 
 # This function asks user to enter friend details and if they fulfill the criteria for a spy
 # then it adds the friend to the friends list of our spy
 # if a friend is added it notifies the user by printing the message "friend added"
 def add_a_friend():
-    pass
+    friend_name = input("What is your friend's name: ")
+    if len(friend_name) > 0:
+        friend_salutation = input("What should we call your friend (Mr or Ms): ").capitalize()
+        friend_age = int(input("Age: "))
+        if check_spy_eligibility(friend_age):
+            friend_rating = float(input("Enter the rating: "))
+            if friend_rating >= spy.rating:
+                friend = Spy(friend_name, friend_salutation, friend_age, friend_rating)
+                spy.add_spy_friend(friend)
+                print("Friend added!")
+            else:
+                print("Your friend has lower rating than you and we can't allow that")
+        else:
+            print("Age is not valid")
+    else:
+        print("You didn't entered a valid name")
+    return len(spy.friend_list)
 
 
 # This function uses Steganography to encode the message and send it to the desired friend
 # it calls the Spy method named select_a_friend to select a friend out of online friends
 def send_secret_msg():
-    pass
+    friend_to_chat = select_a_friend(spy)
+    if friend_to_chat is None:
+        show_menu()
+    else:
+        input_image = input("Enter the name of the image with extension: ")
+        message = input("Type in the message ")
+        file_name = input_image.split(".")
+        if 0 < len(message):
+            encoded_message = lsb.hide(input_image, message)
+            encoded_message.save(file_name[0] + "output." + file_name[1])
+            new_chat = Chat(message, True)
+            spy.friend_list[friend_to_chat].chats.append(new_chat)
+            urgent_message = message.find("SAVE ME" or "SOS")
+            if urgent_message == -1:
+                print("Your secret message is encoded in image! ")
+            else:
+                print('\033[1;31mWe are coming to help you Sir...\033[1;m')
+                print("Your secret message is encoded in image! ")
+        else:
+            print("Sorry! Your message was empty\n")
+    show_menu()
 
 
 def read_secret_msg():
-    pass
+    sender = select_a_friend(spy)
+
+    file_name = input("What is the name of the file?")
+
+    decoded_message = lsb.reveal(file_name)
+    if len(decoded_message) < 10:
+        new_chat = Chat(decoded_message, False)
+        spy.friend_list[sender].chats.append(new_chat)
+        print("Your secret message has been saved!")
+    else:
+        print("Can't read that much ")
+        del (spy.friend_list[sender])
+        print("Removed from Friend List")
+    show_menu()
 
 
 def read_chats():
-    pass
+    read_chat_of = select_a_friend(spy)
+    print("chat history : ")
+    print('\n')
+    print('\n')
+    for a_chat in spy.friend_list[read_chat_of].chats:
+        if a_chat.sent_by_me:
+            print("Time: {} \nSender:\033[1;31mYou\033[1;m\nMessage: {}\nReceiver: {}"
+                  .format('\033[1;34m' + str(a_chat.time) + '\033[1;m', a_chat.message,
+                          spy.friend_list[read_chat_of].spyname))
+            print("\n")
+            print("\n")
+        else:
+            print("Time: {} \nSender: {}\nMessage: {}"
+                  .format('\033[1;34m' + str(a_chat.time) + '\033[1;m',
+                          '\033[1;31m' + spy.friend_list[read_chat_of].spyname
+                          + '\033[1;m', a_chat.message))
+            print("\n")
+            print("\n")
+    show_menu()
 
 
 # This function shows menu to the user
